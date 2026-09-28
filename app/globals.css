@@ -143,10 +143,15 @@ textarea {
 .brand-mark strong { color: #315c3a; font-weight: 800; }
 .brand-icon { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 13px; background: #315c3a; color: #fffdf8; }
 .brand-icon svg { width: 27px; height: 27px; }
-.nav-actions { display: flex; align-items: center; gap: clamp(14px, 2.6vw, 34px); }
-.nav-link { position: relative; padding: 9px 0; color: #425747; font-size: 0.91rem; font-weight: 600; transition: color 160ms ease; }
+.nav-actions { display: flex; min-width: 0; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px clamp(10px, 1.8vw, 24px); }
+.nav-link { position: relative; padding: 9px 0; color: #425747; font-size: 0.91rem; font-weight: 600; transition: color 160ms ease; white-space: nowrap; }
 .nav-link:hover, .nav-link-active { color: #315c3a; }
 .nav-link-active::after { position: absolute; right: 0; bottom: 2px; left: 0; height: 2px; border-radius: 2px; background: #c59b45; content: ""; }
+.nav-account-link { color: #315c3a; }
+.nav-account-primary { border-radius: 999px; background: #315c3a; padding: 9px 13px; color: #fffdf8; }
+.nav-account-primary:hover { background: #264a2e; color: #fffdf8; }
+.nav-admin-link { color: #6d5420; }
+.nav-actions a:focus-visible { border-radius: 6px; outline: 3px solid #c59b45; outline-offset: 3px; }
 .nav-cart { display: inline-flex; min-height: 44px; align-items: center; gap: 9px; border-radius: 999px; background: #315c3a; padding: 0 15px; color: #fffdf8; font-size: 0.9rem; font-weight: 700; transition: background 160ms ease, transform 160ms ease; }
 .nav-cart:hover { transform: translateY(-2px); background: #264a2e; }
 .nav-cart svg { width: 19px; height: 19px; }
@@ -230,7 +235,8 @@ textarea {
   .site-nav > div { flex-wrap: wrap; row-gap: 12px; }
   .brand-mark { font-size: 1.18rem; }
   .brand-icon { width: 35px; height: 35px; }
-  .nav-actions { width: 100%; justify-content: space-between; gap: 8px; }
+  .nav-actions { width: 100%; justify-content: flex-start; gap: 4px 12px; }
+  .nav-account-primary { padding: 8px 11px; }
   .nav-link { font-size: 0.83rem; }
   .nav-cart { min-height: 40px; gap: 7px; padding: 0 11px; font-size: 0.82rem; }
   .hero-section { padding-top: 34px; }
@@ -267,7 +273,7 @@ textarea {
   .site-nav > div { padding-right: 14px; padding-left: 14px; }
   .brand-mark { gap: 7px; font-size: 1.05rem; }
   .brand-icon { width: 32px; height: 32px; border-radius: 11px; }
-  .nav-actions { gap: 5px; }
+  .nav-actions { column-gap: 8px; }
   .nav-link { font-size: 0.76rem; }
   .nav-cart { gap: 5px; padding: 0 8px; font-size: 0.76rem; }
   .cart-count { min-width: 20px; height: 20px; }

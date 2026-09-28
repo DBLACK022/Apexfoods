@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { supabase } from "./lib/supabase";
 import HeroShowcase from "./components/home/HeroShowcase";
 
@@ -118,6 +119,9 @@ type Product = {
             <a href="#home" className="nav-link nav-link-active">Home</a>
             <a href="#products" className="nav-link">Shop</a>
             <a href="#about" className="nav-link">About</a>
+            <Link href="/customer-login" className="nav-link nav-account-link">Sign In</Link>
+            <Link href="/signup" className="nav-link nav-account-link nav-account-primary">Create Account</Link>
+            <Link href="/login" className="nav-link nav-account-link nav-admin-link">Admin Login</Link>
             <a href="#cart" className="nav-cart" aria-label={`View cart, ${totalItems} items`}>
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 4h2l2.1 11.1a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 1.9-1.4L22 8H6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /><circle cx="10" cy="20" r="1.2" fill="currentColor" /><circle cx="18" cy="20" r="1.2" fill="currentColor" /></svg>
               <span>Cart</span><span className="cart-count">{totalItems}</span>
