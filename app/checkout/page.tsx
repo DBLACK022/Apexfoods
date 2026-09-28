@@ -26,6 +26,9 @@ useEffect(() => {
 }, []);
   const [cart, setCart] = useState<Record<number, number>>({});
   const [paymentSubmitted, setPaymentSubmitted] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
+  const [verificationLoading, setVerificationLoading] = useState(false);
 
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -122,10 +125,10 @@ setPaymentSubmitted(true);
   };
   if (paymentSubmitted) {
     return (
-      <main className="min-h-screen bg-green-50 px-6 py-12">
+      <main className="min-h-screen bg-green-50 px-4 py-8 sm:px-6 sm:py-12">
         <div className="mx-auto max-w-2xl">
 
-          <div className="rounded-2xl bg-white p-8 text-center shadow-lg">
+          <div className="rounded-2xl bg-white p-5 text-center shadow-lg sm:p-8">
 
             <div className="text-6xl">
               ✅
@@ -195,22 +198,22 @@ setPaymentSubmitted(true);
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen min-w-0 bg-gray-50">
 
       {/* HEADER */}
-      <header className="bg-green-700 px-6 py-5 text-white shadow-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between">
+      <header className="bg-green-700 px-4 py-4 text-white shadow-md sm:px-6 sm:py-5">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
 
           <a
             href="/"
-            className="text-2xl font-extrabold"
+            className="text-xl font-extrabold sm:text-2xl"
           >
             Apex Foods
           </a>
 
           <a
             href="/"
-            className="rounded-lg bg-white px-4 py-2 font-semibold text-green-700"
+            className="min-h-11 rounded-lg bg-white px-3 py-2 text-sm font-semibold text-green-700 sm:px-4 sm:text-base"
           >
             ← Back to Shop
           </a>
@@ -219,7 +222,7 @@ setPaymentSubmitted(true);
       </header>
 
       {/* CONTENT */}
-      <section className="px-6 py-12">
+      <section className="px-4 py-8 sm:px-6 sm:py-12">
 
         <div className="mx-auto max-w-6xl">
 
@@ -229,7 +232,7 @@ setPaymentSubmitted(true);
               Apex Foods
             </p>
 
-            <h1 className="mt-2 text-4xl font-extrabold">
+            <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">
               Checkout
             </h1>
 
@@ -242,7 +245,7 @@ setPaymentSubmitted(true);
           <div className="grid gap-8 lg:grid-cols-3">
 
             {/* LEFT SIDE */}
-            <div className="rounded-2xl bg-white p-6 shadow-md lg:col-span-2">
+            <div className="min-w-0 rounded-2xl bg-white p-4 shadow-md sm:p-6 lg:col-span-2">
 
               {/* CUSTOMER INFORMATION */}
               <h2 className="mb-6 text-2xl font-bold">
@@ -326,7 +329,7 @@ setPaymentSubmitted(true);
                   <button
                     type="button"
                     onClick={() => setPaymentMethod("full")}
-                    className={`w-full rounded-xl border-2 p-5 text-left transition ${
+                    className={`w-full rounded-xl border-2 p-4 text-left transition sm:p-5 ${
                       paymentMethod === "full"
                         ? "border-green-600 bg-green-50"
                         : "border-gray-200 bg-white"
@@ -359,7 +362,7 @@ setPaymentSubmitted(true);
                   <button
                     type="button"
                     onClick={() => setPaymentMethod("installment")}
-                    className={`w-full rounded-xl border-2 p-5 text-left transition ${
+                    className={`w-full rounded-xl border-2 p-4 text-left transition sm:p-5 ${
                       paymentMethod === "installment"
                         ? "border-green-600 bg-green-50"
                         : "border-gray-200 bg-white"
@@ -548,7 +551,7 @@ setPaymentSubmitted(true);
             </div>
 
             {/* ORDER SUMMARY */}
-            <aside className="h-fit rounded-2xl bg-white p-6 shadow-md">
+            <aside className="h-fit min-w-0 rounded-2xl bg-white p-4 shadow-md sm:p-6">
 
               <h2 className="text-2xl font-bold">
                 Order Summary

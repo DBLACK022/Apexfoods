@@ -121,7 +121,7 @@ async function fetchProducts() {
   setProducts(data || []);
 }
   return (
-    <main className="min-h-screen bg-gray-100 p-6">
+    <main className="min-h-screen bg-gray-100 p-4 sm:p-6">
       <div className="mx-auto max-w-6xl">
 
         {/* HEADER */}
@@ -145,25 +145,25 @@ async function fetchProducts() {
         </div>
 
         {/* ORDERS */}
-        <div className="rounded-2xl bg-white shadow-md">
+        <div className="min-w-0 rounded-2xl bg-white shadow-md">
 
-          <div className="border-b p-6">
+          <div className="border-b p-4 sm:p-6">
             <h2 className="text-xl font-bold">
               Customer Orders
             </h2>
           </div>
 
           {loading ? (
-            <div className="p-6 text-gray-500">
+            <div className="p-4 text-gray-500 sm:p-6">
               Loading orders...
             </div>
           ) : orders.length === 0 ? (
-            <div className="p-6 text-gray-500">
+            <div className="p-4 text-gray-500 sm:p-6">
               No orders have been received yet.
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
+              <table className="w-full min-w-[900px] text-left">
 
                 <thead className="bg-gray-50">
   <tr>
@@ -259,9 +259,9 @@ async function fetchProducts() {
 
         </div>
 {/* PRODUCT MANAGEMENT */}
-        <div className="mt-8 rounded-2xl bg-white shadow-md">
+        <div className="mt-8 min-w-0 rounded-2xl bg-white shadow-md">
 
-          <div className="border-b p-6">
+          <div className="border-b p-4 sm:p-6">
             <h2 className="text-xl font-bold">
               Product Management
             </h2>
@@ -271,7 +271,7 @@ async function fetchProducts() {
             </p>
           </div>
 
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
 
             <div className="grid gap-4 md:grid-cols-2">
 
