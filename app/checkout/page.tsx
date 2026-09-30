@@ -143,7 +143,7 @@ setPaymentSubmitted(true);
             </p>
 
             <p className="mt-2 text-gray-600">
-              Your order has been submitted successfully. Apex Foods
+              Your order has been submitted successfully. APEX GREEN GLOBAL FOODS
               will review your payment and process your order.
             </p>
 
@@ -208,7 +208,7 @@ setPaymentSubmitted(true);
             href="/"
             className="text-xl font-extrabold sm:text-2xl"
           >
-            Apex Foods
+            APEX GREEN GLOBAL FOODS
           </a>
 
           <a
@@ -229,7 +229,7 @@ setPaymentSubmitted(true);
           <div className="mb-10">
 
             <p className="font-semibold uppercase tracking-widest text-green-700">
-              Apex Foods
+              APEX GREEN GLOBAL FOODS
             </p>
 
             <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">
@@ -534,7 +534,7 @@ setPaymentSubmitted(true);
 
                 <p className="mt-4 text-sm text-gray-700">
                   After making the transfer, click the button below
-                  to notify Apex Foods that your payment has been made.
+                  to notify APEX GREEN GLOBAL FOODS that your payment has been made.
                 </p>
 
                 <button

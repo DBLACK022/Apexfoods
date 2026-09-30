@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import type { User } from "@supabase/supabase-js";
 import { supabase } from "./lib/supabase";
 import HeroShowcase from "./components/home/HeroShowcase";
 
@@ -37,6 +38,62 @@ type Product = {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const [navUser, setNavUser] = useState<User | null>(null);
+  const [navProfile, setNavProfile] = useState({ fullName: "", pictureUrl: "" });
+  const [authLoaded, setAuthLoaded] = useState(false);
+  const [authRevision, setAuthRevision] = useState(0);
+  const [signingOut, setSigningOut] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    void supabase.auth.getSession().then(({ data, error }) => {
+      if (!active) return;
+      if (error) console.error("Could not restore customer session:", error);
+      const user = data.session?.user ?? null;
+      setNavUser(user);
+      setNavProfile({
+        fullName: typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : "",
+        pictureUrl: typeof user?.user_metadata?.profile_picture_url === "string" ? user.user_metadata.profile_picture_url : "",
+      });
+      setAuthLoaded(true);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      const user = session?.user ?? null;
+      setNavUser(user);
+      setNavProfile({
+        fullName: typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : "",
+        pictureUrl: typeof user?.user_metadata?.profile_picture_url === "string" ? user.user_metadata.profile_picture_url : "",
+      });
+      setAuthLoaded(true);
+      setAuthRevision((revision) => revision + 1);
+    });
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    const user = navUser;
+    if (!user) return;
+    let active = true;
+    const fallback = {
+      fullName: typeof user.user_metadata?.full_name === "string" ? user.user_metadata.full_name : "",
+      pictureUrl: typeof user.user_metadata?.profile_picture_url === "string" ? user.user_metadata.profile_picture_url : "",
+    };
+    void supabase.from("profiles").select("full_name, profile_picture_url").eq("id", user.id).maybeSingle().then(({ data, error }) => {
+      if (!active) return;
+      if (error) {
+        console.error("Could not load customer navigation profile:", error);
+        return;
+      }
+      setNavProfile({
+        fullName: data?.full_name || fallback.fullName,
+        pictureUrl: data?.profile_picture_url || fallback.pictureUrl,
+      });
+    });
+    return () => { active = false; };
+  }, [navUser, authRevision]);
 
   useEffect(() => {
     fetchProducts();
@@ -108,20 +165,43 @@ type Product = {
       {/* NAVIGATION */}
       <nav className="site-nav sticky top-0 z-50">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-4 sm:px-6">
-          <a href="#home" className="brand-mark" aria-label="Apex Foods home">
+          <a href="#home" className="brand-mark" aria-label="APEX GREEN GLOBAL FOODS home">
             <span className="brand-icon" aria-hidden="true">
               <svg viewBox="0 0 32 32" fill="none"><path d="M16 27V13m0 8C8.5 21 5 16.5 5 10c7.5 0 11 4.5 11 11Zm0-5c0-6 3.5-9.5 10-9.5 0 6.5-3.5 9.5-10 9.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </span>
-            <span>Apex <strong>Foods</strong></span>
+            <span className="brand-name">APEX GREEN GLOBAL FOODS</span>
           </a>
 
           <div className="nav-actions">
             <a href="#home" className="nav-link nav-link-active">Home</a>
             <a href="#products" className="nav-link">Shop</a>
             <a href="#about" className="nav-link">About</a>
-            <Link href="/customer-login" className="nav-link nav-account-link">Sign In</Link>
-            <Link href="/signup" className="nav-link nav-account-link nav-account-primary">Create Account</Link>
-            <Link href="/login" className="nav-link nav-account-link nav-admin-link">Admin Login</Link>
+            {authLoaded && (navUser ? (
+              <>
+                <Link href="/profile" className="nav-link nav-account-link nav-profile-link">
+                  {navProfile.pictureUrl ? <img src={navProfile.pictureUrl} alt="" className="nav-profile-picture" /> : null}
+                  <span>My Account</span>
+                  {navProfile.fullName ? <span className="nav-user-name">{navProfile.fullName}</span> : null}
+                </Link>
+                <button
+                  type="button"
+                  disabled={signingOut}
+                  onClick={async () => {
+                    setSigningOut(true);
+                    const { error } = await supabase.auth.signOut();
+                    if (error) console.error("Customer sign out failed:", error);
+                    setSigningOut(false);
+                  }}
+                  className="nav-link nav-account-link nav-signout"
+                >{signingOut ? "Signing Out..." : "Sign Out"}</button>
+              </>
+            ) : (
+              <>
+                <Link href="/customer-login" className="nav-link nav-account-link">Sign In</Link>
+                <Link href="/signup" className="nav-link nav-account-link nav-account-primary">Create Account</Link>
+                <Link href="/login" className="nav-link nav-account-link nav-admin-link">Admin Login</Link>
+              </>
+            ))}
             <a href="#cart" className="nav-cart" aria-label={`View cart, ${totalItems} items`}>
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 4h2l2.1 11.1a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 1.9-1.4L22 8H6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /><circle cx="10" cy="20" r="1.2" fill="currentColor" /><circle cx="18" cy="20" r="1.2" fill="currentColor" /></svg>
               <span>Cart</span><span className="cart-count">{totalItems}</span>
@@ -165,7 +245,7 @@ type Product = {
           <HeroShowcase products={products} />
         </div>
 
-        <div className="benefit-strip relative z-10 mx-auto mt-10 max-w-7xl" aria-label="Apex Foods benefits">
+        <div className="benefit-strip relative z-10 mx-auto mt-10 max-w-7xl" aria-label="APEX GREEN GLOBAL FOODS benefits">
           <Benefit icon="leaf" title="Quality products" description="Carefully selected raw foods" />
           <Benefit icon="basket" title="Easy ordering" description="Shop your way, with ease" />
           <Benefit icon="shield" title="Convenient checkout" description="Choose a payment option" />
@@ -346,7 +426,7 @@ type Product = {
         <div className="mx-auto max-w-3xl">
 
             <p className="font-semibold uppercase tracking-widest text-[#315C3A]">
-            About Apex Foods
+            About APEX GREEN GLOBAL FOODS
           </p>
 
           <h2 className="mt-2 text-3xl font-bold !text-[#19351F]">
@@ -354,7 +434,7 @@ type Product = {
           </h2>
 
           <p className="mt-5 leading-8 text-[#19351F]">
-            Apex Foods provides quality raw food products to make
+            APEX GREEN GLOBAL FOODS provides quality raw food products to make
             shopping easier and more convenient. Our goal is to
             provide customers with reliable products at affordable
             prices.
@@ -367,7 +447,7 @@ type Product = {
       <footer className="bg-[#19351F] px-6 py-8 text-center text-white">
 
         <h2 className="text-2xl font-bold !text-white">
-          Apex Foods
+          APEX GREEN GLOBAL FOODS
         </h2>
 
         <p className="mt-2 text-[#F3EBDD]">
@@ -375,7 +455,7 @@ type Product = {
         </p>
 
         <p className="mt-6 text-sm text-[#E5DCCB]">
-          © 2026 Apex Foods. All rights reserved.
+          © 2026 APEX GREEN GLOBAL FOODS. All rights reserved.
         </p>
 
       </footer>

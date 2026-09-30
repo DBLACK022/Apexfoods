@@ -127,7 +127,7 @@ async function fetchProducts() {
         {/* HEADER */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            Apex Foods Admin
+            APEX GREEN GLOBAL FOODS Admin
           </h1>
 
           <p className="mt-2 text-gray-600">
@@ -267,7 +267,7 @@ async function fetchProducts() {
             </h2>
 
             <p className="mt-2 text-gray-600">
-              Add and manage Apex Foods products.
+              Add and manage APEX GREEN GLOBAL FOODS products.
             </p>
           </div>
 
