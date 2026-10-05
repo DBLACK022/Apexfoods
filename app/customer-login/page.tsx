@@ -70,7 +70,7 @@ export default function CustomerLoginPage() {
     <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-md sm:p-8">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-extrabold text-green-700">APEX GREEN GLOBAL FOODS</h1>
+          <h1 className="text-3xl font-extrabold text-green-700">APEX GREEN GLOBAL FOODS LIMITED</h1>
           <p className="mt-2 text-gray-600">Customer Login</p>
         </div>
         <form onSubmit={handleLogin} className="space-y-5">

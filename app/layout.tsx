@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "APEX GREEN GLOBAL FOODS",
-  description: "Quality raw food products at your convenience from APEX GREEN GLOBAL FOODS.",
+  title: "APEX GREEN GLOBAL FOODS LIMITED",
+  description: "Clean, affordable foodstuff in bulk and retail from APEX GREEN GLOBAL FOODS LIMITED, a registered Nigerian foodstuff trading company.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

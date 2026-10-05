@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
+const productCategories = ["Grains", "Oils", "Proteins", "Tubers", "Others & Spices"] as const;
 type Order = {
   id: number;
   created_at: string;
@@ -25,11 +26,13 @@ export default function AdminPage() {
   const [productName, setProductName] = useState("");
 const [productPrice, setProductPrice] = useState("");
 const [productImage, setProductImage] = useState("");
+const [productCategory, setProductCategory] = useState<string>(productCategories[0]);
 const [addingProduct, setAddingProduct] = useState(false);
 const [products, setProducts] = useState<any[]>([]);
 const [editingProduct, setEditingProduct] = useState<number | null>(null);
 const [editName, setEditName] = useState("");
 const [editPrice, setEditPrice] = useState("");
+const [editCategory, setEditCategory] = useState<string>(productCategories[0]);
   useEffect(() => {
   checkAdmin();
 }, []);
@@ -127,7 +130,7 @@ async function fetchProducts() {
         {/* HEADER */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            APEX GREEN GLOBAL FOODS Admin
+            APEX GREEN GLOBAL FOODS LIMITED Admin
           </h1>
 
           <p className="mt-2 text-gray-600">
@@ -267,7 +270,7 @@ async function fetchProducts() {
             </h2>
 
             <p className="mt-2 text-gray-600">
-              Add and manage APEX GREEN GLOBAL FOODS products.
+              Add and manage APEX GREEN GLOBAL FOODS LIMITED products.
             </p>
           </div>
 
@@ -290,6 +293,10 @@ async function fetchProducts() {
   onChange={(e) => setProductPrice(e.target.value)}
   className="rounded-lg border border-gray-300 px-4 py-3"
 />
+
+<select value={productCategory} onChange={(e) => setProductCategory(e.target.value)} className="rounded-lg border border-gray-300 px-4 py-3" aria-label="Product category">
+  {productCategories.map((category) => <option key={category} value={category}>{category}</option>)}
+</select>
 
 <input
   type="file"
@@ -335,6 +342,7 @@ async function fetchProducts() {
       .insert({
         name: productName,
         price: Number(productPrice),
+        category: productCategory,
         image_url: productImage || null,
         available: true,
       });
@@ -352,6 +360,8 @@ async function fetchProducts() {
     setProductName("");
     setProductPrice("");
     setProductImage("");
+    setProductCategory(productCategories[0]);
+    fetchProducts();
   }}
   disabled={addingProduct}
   className="rounded-lg bg-black px-5 py-3 font-semibold text-white hover:bg-gray-800 disabled:opacity-50"
@@ -397,6 +407,10 @@ async function fetchProducts() {
         className="w-full rounded-lg border border-gray-300 px-3 py-2"
       />
 
+      <select value={editCategory} onChange={(e) => setEditCategory(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2" aria-label="Product category">
+        {productCategories.map((category) => <option key={category} value={category}>{category}</option>)}
+      </select>
+
       <button
         onClick={async () => {
           const { data, error } = await supabase
@@ -404,6 +418,7 @@ async function fetchProducts() {
             .update({
               name: editName,
               price: Number(editPrice),
+              category: editCategory,
             })
             .eq("id", product.id)
             .select("*");
@@ -443,6 +458,8 @@ async function fetchProducts() {
         {product.name}
       </p>
 
+      <p className="text-sm text-gray-500">{product.category || "Uncategorized"}</p>
+
       <p className="text-gray-600">
         ₦{Number(product.price).toLocaleString()}
       </p>
@@ -464,6 +481,7 @@ async function fetchProducts() {
     setEditingProduct(product.id);
     setEditName(product.name);
     setEditPrice(String(product.price));
+    setEditCategory(product.category || productCategories[0]);
   }}
   className="mr-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700"
 >

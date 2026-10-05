@@ -24,7 +24,7 @@ export default function HeroShowcase({ products }: { products: HeroProduct[] }) 
   const picturedProducts = products.filter((product) => product.image_url).slice(0, 3);
 
   return (
-    <div className="hero-showcase" aria-label="A selection of APEX GREEN GLOBAL FOODS products">
+    <div className="hero-showcase" aria-label="A selection of APEX GREEN GLOBAL FOODS LIMITED products">
       <div className="showcase-backdrop" aria-hidden="true">
         <span className="backdrop-ring backdrop-ring-one" />
         <span className="backdrop-ring backdrop-ring-two" />

@@ -66,7 +66,7 @@ export default function AuthCallbackPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-lg rounded-2xl bg-white p-6 text-center shadow-md sm:p-8">
-        <h1 className="text-2xl font-extrabold text-green-700">APEX GREEN GLOBAL FOODS</h1>
+        <h1 className="text-2xl font-extrabold text-green-700">APEX GREEN GLOBAL FOODS LIMITED</h1>
         <p role="status" className="mt-4 text-gray-700">{message}</p>
         {message.startsWith("Email confirmation failed:") || message.startsWith("Could not") || message.startsWith("No authenticated") ? (
           <a href="/customer-login" className="mt-6 inline-block font-bold text-green-700 hover:underline">Go to customer login</a>
