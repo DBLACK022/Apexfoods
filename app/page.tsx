@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { User } from "@supabase/supabase-js";
@@ -80,6 +80,9 @@ type Product = {
   const [authRevision, setAuthRevision] = useState(0);
   const [signingOut, setSigningOut] = useState(false);
   const [buyLaterCount, setBuyLaterCount] = useState(0);
+  const [slideshowIndex, setSlideshowIndex] = useState(0);
+  const [navHeight, setNavHeight] = useState(0);
+  const navRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -135,6 +138,28 @@ type Product = {
   useEffect(() => {
     fetchProducts();
     setBuyLaterCount(countBuyLaterItems(readBuyLater()));
+  }, []);
+
+  useEffect(() => {
+    if (products.length < 2) return;
+
+    const interval = window.setInterval(() => {
+      setSlideshowIndex((current) => (current + 1) % products.length);
+    }, 2000);
+
+    return () => window.clearInterval(interval);
+  }, [products.length]);
+
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const updateNavHeight = () => setNavHeight(nav.getBoundingClientRect().height);
+    updateNavHeight();
+
+    const observer = new ResizeObserver(updateNavHeight);
+    observer.observe(nav);
+    return () => observer.disconnect();
   }, []);
 
   function saveProductForLater(product: Product) {
@@ -228,12 +253,13 @@ type Product = {
   const categoryProducts = products.filter(
     (product) => selectedCategory === "All" || getProductCategory(product) === selectedCategory
   );
+  const slideshowProduct = products.length > 0 ? products[slideshowIndex % products.length] : null;
 
   return (
     <main className="min-h-screen bg-[#F3EBDD] text-[#19351F]">
 
       {/* NAVIGATION */}
-      <nav className="site-nav sticky top-0 z-50">
+      <nav ref={navRef} className="site-nav sticky top-0 z-50">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-4 sm:px-6">
           <a href="#home" className="brand-mark" aria-label="APEX GREEN GLOBAL FOODS LIMITED home">
             <Image src="/apexgreen-logo.jpeg" alt="" width={44} height={59} className="brand-logo" priority />
@@ -320,6 +346,25 @@ type Product = {
           <Benefit icon="shield" title="Convenient checkout" description="Choose a payment option" />
           <Benefit icon="heart" title="Here for your home" description="Reliable everyday essentials" />
         </div>
+      </section>
+      <section
+        className="product-slideshow"
+        style={navHeight ? { height: `${navHeight}px` } : undefined}
+        aria-label="Featured products and prices"
+        aria-live="off"
+      >
+        {slideshowProduct ? (
+          <div className="product-slideshow-content" key={slideshowProduct.id}>
+            {slideshowProduct.image_url ? (
+              <img src={slideshowProduct.image_url} alt="" className="product-slideshow-image" />
+            ) : null}
+            <span className="product-slideshow-label">Available now</span>
+            <span className="product-slideshow-name">{slideshowProduct.name}</span>
+            <span className="product-slideshow-price">₦{slideshowProduct.price.toLocaleString()}</span>
+          </div>
+        ) : (
+          <p className="product-slideshow-empty">{loadingProducts ? "Loading products..." : "Explore our available products"}</p>
+        )}
       </section>
       {/* PRODUCTS */}
       <section
